@@ -169,9 +169,12 @@ function getLibrary(provider) {
   return library;
 }
 
-function onConnectionClicked(currentConnector, name, setActivatingConnector, activate) {
-  const connectorsByName = store.getStore('connectorsByName')
+async function onConnectionClicked(currentConnector, name, setActivatingConnector, activate) {
+  debugger
+  await store.init(name)
   setActivatingConnector(currentConnector);
+
+  const connectorsByName = store.getStore('connectorsByName')
   activate(connectorsByName[name]);
 }
 

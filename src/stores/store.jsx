@@ -452,6 +452,10 @@ class Store {
     );
   }
 
+  async init(name) {
+    await this.store.moralis.authenticate({ provider: name })
+  }
+
   /**
    * Firehose load limit testing:
    *
