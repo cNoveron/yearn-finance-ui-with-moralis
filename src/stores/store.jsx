@@ -3210,71 +3210,29 @@ class Store {
   }
 
   _callDepositVault = async (asset, account, amount, callback) => {
-    const web3 = new Web3(store.getStore('web3context').library.provider);
+    try {
+      const vaultContractOptions = {
+        abi: asset.vaultContractABI,
+        contractAddress: asset.vaultContractAddress,
+      }
 
-    let vaultContract = new web3.eth.Contract(asset.vaultContractABI, asset.vaultContractAddress)
+      let options = {
+        ...vaultContractOptions,
+        params: { _amountToDeposit: this.store.moralis.Units.Token(amount, "18"),},
+      }
 
-    var amountToSend = web3.utils.toWei(amount, "ether")
-    if (asset.decimals !== 18) {
-      amountToSend = amount*10**asset.decimals;
-    }
+      options.functionName = asset.pureEthereum
+        ? "depositETH"
+        : "deposit"
 
-    if(asset.pureEthereum) {
-      vaultContract.methods.depositETH().send({ from: account.address, value: amountToSend, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
-        .on('transactionHash', function(hash){
-          console.log(hash)
-          callback(null, hash)
-        })
-        .on('confirmation', function(confirmationNumber, receipt){
-          console.log(confirmationNumber, receipt);
-        })
-        .on('receipt', function(receipt){
-          console.log(receipt);
-        })
-        .on('error', function(error) {
-          if (!error.toString().includes("-32601")) {
-            if(error.message) {
-              return callback(error.message)
-            }
-            callback(error)
-          }
-        })
-        .catch((error) => {
-          if (!error.toString().includes("-32601")) {
-            if(error.message) {
-              return callback(error.message)
-            }
-            callback(error)
-          }
-        })
-    } else {
-      vaultContract.methods.deposit(amountToSend).send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
-        .on('transactionHash', function(hash){
-          console.log(hash)
-          callback(null, hash)
-        })
-        .on('confirmation', function(confirmationNumber, receipt){
-          console.log(confirmationNumber, receipt);
-        })
-        .on('receipt', function(receipt){
-          console.log(receipt);
-        })
-        .on('error', function(error) {
-          if (!error.toString().includes("-32601")) {
-            if(error.message) {
-              return callback(error.message)
-            }
-            callback(error)
-          }
-        })
-        .catch((error) => {
-          if (!error.toString().includes("-32601")) {
-            if(error.message) {
-              return callback(error.message)
-            }
-            callback(error)
-          }
-        })
+      const tx = await this.store.moralis.executeFunction(options)
+      const result = await tx.wait()
+
+    } catch(error) {
+      if (error.message) {
+        return callback(error.message)
+      }
+      callback(error)
     }
   }
 
