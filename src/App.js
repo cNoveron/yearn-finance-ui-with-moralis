@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import {
   Switch,
   Route
 } from "react-router-dom";
+import { useMoralis } from "react-moralis";
 import IpfsRouter from 'ipfs-react-router'
 
 import './i18n';
@@ -37,11 +38,16 @@ import Store from "./stores";
 const emitter = Store.emitter
 const store = Store.store
 
-class App extends Component {
-  state = {};
-  updateAccount () {
+const App = ({}) => {
+
+  const { enableWeb3, isWeb3Enabled, isAuthenticated, isWeb3EnableLoading, Moralis, } = useMoralis()
+
+  function updateAccount() {
     window.ethereum.on('accountsChanged', function (accounts) {
-      store.setStore({ account: { address: accounts[0] } })
+      store.setStore({
+        account: { address: accounts[0] },
+        moralis: Moralis,
+      })
 
       const web3context = store.getStore('web3context')
       if(web3context) {
@@ -49,103 +55,113 @@ class App extends Component {
       }
     })
   }
-  componentWillMount() {
+
+  useEffect(() => {
     injected.isAuthorized().then(isAuthorized => {
       if (isAuthorized) {
         injected.activate()
-        .then((a) => {
-          store.setStore({ account: { address: a.account }, web3context: { library: { provider: a.provider } } })
-          emitter.emit(CONNECTION_CONNECTED)
-          // store.connectToFirehose(a.account)
-        })
-        .catch((e) => {
-          console.log(e)
-        })
+          .then((a) => {
+            store.setStore({
+              account: { address: a.account },
+              web3context: { library: { provider: a.provider } },
+              moralis: Moralis,
+            })
+            emitter.emit(CONNECTION_CONNECTED)
+            // store.connectToFirehose(a.account)
+          })
+          .catch((e) => {
+            console.log(e)
+          })
       } else {
 
       }
     });
 
-    if(window.ethereum) {
-      this.updateAccount()
+    if (window.ethereum) {
+      updateAccount()
     } else {
-      window.addEventListener('ethereum#initialized', this.updateAccount, {
+      window.addEventListener('ethereum#initialized', updateAccount, {
         once: true,
       });
     }
-  }
+  }, [])
 
-  render() {
-    return (
-      <MuiThemeProvider theme={ createMuiTheme(interestTheme) }>
-        <CssBaseline />
-        <IpfsRouter>
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            minHeight: '100vh',
-            alignItems: 'center',
-            background: "#f9fafb"
-          }}>
-            <SEO />
-            <Switch>
-              <Route path="/stats">
-                <Header />
-                <APR />
-              </Route>
-              <Route path="/earn">
-                <Header />
-                <InvestSimple />
-              </Route>
-              <Route path="/zap">
-                <Header />
-                <Zap />
-              </Route>
-              <Route path="/idai">
-                <IDai />
-              </Route>
-              <Route path="/performance">
-                <Header />
-                <Performance />
-              </Route>
-              <Route path="/manage">
-                <Header />
-                <Manage />
-              </Route>
-              <Route path="/vaults">
-                <Header />
-                <Vaults />
-              </Route>
-              <Route path='/dashboard'>
-                <Header />
-                <Dashboard />
-              </Route>
-              <Route path='/experimental'>
-                <Header />
-                <Experimental />
-              </Route>
-              <Route path='/lending'>
-                <Header />
-                <Lending />
-              </Route>
-              <Route path='/cover'>
-                <Header />
-                <Cover />
-              </Route>
-              <Route path='/firehose'>
-                <Header />
-                <Firehose />
-              </Route>
-              <Route path="/">
-                <Home />
-              </Route>
-            </Switch>
-            <Footer />
-          </div>
-        </IpfsRouter>
-      </MuiThemeProvider>
-    );
-  }
+  useEffect(() => {
+    const connectorId = window.localStorage.getItem("connectorId");
+    if (isAuthenticated && !isWeb3Enabled && !isWeb3EnableLoading) enableWeb3({ provider: connectorId });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, isWeb3Enabled]);
+
+  return (
+    <MuiThemeProvider theme={ createMuiTheme(interestTheme) }>
+      <CssBaseline />
+      <IpfsRouter>
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100vh',
+          alignItems: 'center',
+          background: "#f9fafb"
+        }}>
+          <SEO />
+          <Switch>
+            <Route path="/stats">
+              <Header />
+              <APR />
+            </Route>
+            <Route path="/earn">
+              <Header />
+              <InvestSimple />
+            </Route>
+            <Route path="/zap">
+              <Header />
+              <Zap />
+            </Route>
+            <Route path="/idai">
+              <IDai />
+            </Route>
+            <Route path="/performance">
+              <Header />
+              <Performance />
+            </Route>
+            <Route path="/manage">
+              <Header />
+              <Manage />
+            </Route>
+            <Route path="/vaults">
+              <Header />
+              <Vaults />
+            </Route>
+            <Route path='/dashboard'>
+              <Header />
+              <Dashboard />
+            </Route>
+            <Route path='/experimental'>
+              <Header />
+              <Experimental />
+            </Route>
+            <Route path='/lending'>
+              <Header />
+              <Lending />
+            </Route>
+            <Route path='/cover'>
+              <Header />
+              <Cover />
+            </Route>
+            <Route path='/firehose'>
+              <Header />
+              <Firehose />
+            </Route>
+            <Route path="/">
+              <Home />
+            </Route>
+          </Switch>
+          <Footer />
+        </div>
+      </IpfsRouter>
+    </MuiThemeProvider>
+  );
+
 }
 
 export default App;
