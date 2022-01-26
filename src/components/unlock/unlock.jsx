@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
+import { useMoralis } from "react-moralis";
 import { withStyles } from '@material-ui/core/styles';
 import {
   Typography,
@@ -217,12 +218,18 @@ function MyComponent(props) {
     }
   }, [activatingConnector, connector]);
 
+  const { Moralis } = useMoralis()
+
   React.useEffect(() => {
     if (account && active && library) {
-      store.setStore({ account: { address: account }, web3context: context })
+      store.setStore({
+        account: { address: account },
+        web3context: context,
+        moralis: Moralis,
+      })
       emitter.emit(CONNECTION_CONNECTED)
     }
-  }, [account, active, closeModal, context, library]);
+  }, [account, active, closeModal, context, library, Moralis]);
 
   // React.useEffect(() => {
   //   if (storeContext && storeContext.active && !active) {

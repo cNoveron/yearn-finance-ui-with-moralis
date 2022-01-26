@@ -325,7 +325,8 @@ class Store {
         }
       ],
       ethBalance: 0,
-      sCrvBalance:  0
+      sCrvBalance: 0,
+      moralis: null
     }
 
     dispatcher.register(
