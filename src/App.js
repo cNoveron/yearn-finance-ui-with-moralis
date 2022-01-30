@@ -11,21 +11,21 @@ import IpfsRouter from 'ipfs-react-router'
 import './i18n';
 import interestTheme from './theme';
 
-import APR from './components/apr';
-import InvestSimple from './components/investSimple';
-import Manage from './components/manage';
-import Performance from './components/performance';
-import Zap from './components/zap';
-import IDai from './components/idai';
+// import APR from './components/apr';
+// import InvestSimple from './components/investSimple';
+// import Manage from './components/manage';
+// import Performance from './components/performance';
+// import Zap from './components/zap';
+// import IDai from './components/idai';
 import Footer from './components/footer';
 import Home from './components/home';
 import Header from './components/header';
 import Vaults from './components/vault';
-import Dashboard from './components/dashboard';
-import Experimental from './components/experimental';
-import Lending from './components/lending';
-import Cover from './components/cover';
-import Firehose from './components/firehose';
+// import Dashboard from './components/dashboard';
+// import Experimental from './components/experimental';
+// import Lending from './components/lending';
+// import Cover from './components/cover';
+// import Firehose from './components/firehose';
 import SEO from './components/seo';
 
 import { injected } from "./stores/connectors";
@@ -105,7 +105,7 @@ const App = ({}) => {
         }}>
           <SEO />
           <Switch>
-            <Route path="/stats">
+            {/* <Route path="/stats">
               <Header />
               <APR />
             </Route>
@@ -127,12 +127,12 @@ const App = ({}) => {
             <Route path="/manage">
               <Header />
               <Manage />
-            </Route>
+            </Route> */}
             <Route path="/vaults">
               <Header />
               <Vaults />
             </Route>
-            <Route path='/dashboard'>
+            {/* <Route path='/dashboard'>
               <Header />
               <Dashboard />
             </Route>
@@ -151,7 +151,7 @@ const App = ({}) => {
             <Route path='/firehose'>
               <Header />
               <Firehose />
-            </Route>
+            </Route> */}
             <Route path="/">
               <Home />
             </Route>

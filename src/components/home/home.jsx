@@ -276,17 +276,17 @@ class Home extends Component {
 
     return (
       <div className={ classes.root }>
-        <Card className={ `${classes.card} ${classes.apr}` } onClick={ () => { this.nav('dashboard') } }>
+        {/* <Card className={ `${classes.card} ${classes.apr}` } onClick={ () => { this.nav('dashboard') } }>
           <BarChartIcon className={ `${classes.icon} icon` } />
           <Typography variant={'h3'} className={ `${classes.title} title` }>Dashboard</Typography>
           <Typography variant={'h4'} className={ `${classes.description} description` }>{ "Get a quick glance at how your portfolio is growing while invested in yearn's products." }</Typography>
-        </Card>
+        </Card> */}
         <Card className={ `${classes.card} ${classes.vault}` } onClick={ () => { this.nav('vaults') }}>
           <PieChartIcon className={ `${classes.icon} icon` } />
           <Typography variant={'h3'} className={ `${classes.title} title` }>{ t("Home.Vaults") }</Typography>
           <Typography variant={'h4'} className={ `${classes.description} description` }>{ "Vaults follow unique strategies that are designed to maximize the yield of the deposited asset and minimize risk." }</Typography>
         </Card>
-        <Card className={ `${classes.card} ${classes.earn}` } onClick={ () => { this.nav('earn') } }>
+        {/* <Card className={ `${classes.card} ${classes.earn}` } onClick={ () => { this.nav('earn') } }>
           <AttachMoneyIcon className={ `${classes.icon} icon` } />
           <Typography variant={'h3'} className={ `${classes.title} title` }>{ t("Home.Earn") }</Typography>
           <Typography variant={'h4'} className={ `${classes.description} description` }>{ "Earn performs profit switching for lending providers, moving your funds between dydx, Aave, Compound autonomously." }</Typography>
@@ -315,7 +315,7 @@ class Home extends Component {
           <BarChartIcon className={ `${classes.icon} icon` } />
           <Typography variant={'h3'} className={ `${classes.title} title` }>Stats</Typography>
           <Typography variant={'h4'} className={ `${classes.description} description` }>{ "Get a quick glance at how yearn's vaults are performing." }</Typography>
-        </Card>
+        </Card> */}
       </div>
     )
   };
